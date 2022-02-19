@@ -6,6 +6,19 @@ from django.db import models
 #
 
 
+# HierarchicalModelMixin
+# Mixin for models with parent-child-relationship.
+class HierarchicalModelMixin(models.Model):
+    parent = models.ForeignKey('self',
+                               on_delete=models.CASCADE,
+                               related_name="children",
+                               null=True,
+                               blank=True)
+
+    class Meta:
+        abstract = True
+
+
 # NamedModelMixin
 # Mixin for models with a name field.
 class NamedModelMixin(models.Model):
@@ -21,10 +34,10 @@ class NamedModelMixin(models.Model):
 # ShortNamedModelMixin
 # Mixin for named models with a short_name field.
 class ShortNamedModelMixin(NamedModelMixin):
-    short_name = models.CharField(max_length=100)
+    short_name = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return "{},{}".format(self.name, self.short_name)
+        return "{}, {}".format(self.name, self.short_name)
 
     class Meta:
         abstract = True
